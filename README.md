@@ -21,11 +21,29 @@ npm run build    # static site in dist/ — deploy to Vercel / Netlify / Cloudfl
   - *Symbol:* ✝ ☦ ✟ candle, or none
 - **Ready Bulgarian texts** that adapt to gender and relation (съпруг, баща и дядо…), several variants per type, fully editable
 - **Suggested помен dates** (40th day counts the day of death as day 1; 6 months; 1 year; yearly)
-- **Photo upload** with optional black-and-white
+- **Photo editor** (opens on upload):
+  - crop: drag and zoom in the exact frame shape of the template; rotate; undo; back to the original
+  - **✨ Само портрет:** AI finds the face and crops head and shoulders (MediaPipe, runs in the browser)
+  - **Background:** keep it, or replace it with white, light grey, studio, dark or blurred (AI person segmentation, in the browser)
+  - **🪄 AI подобряване:** restores old, blurry or low-quality faces (GFPGAN on Replicate, server-side)
+  - light: auto-fix, sharpen, brightness, contrast; hold to compare with the original
+  - black-and-white option
 - **Print / Save as PDF** at exact A4 size
 - **Calendar reminders (.ics)** for 40 дни / 6 месеца / 1 година, with an alert 3 days before. This is the hook for repeat customers.
 
-Everything runs in the browser. There's no backend, and no personal data leaves the device.
+Everything runs in the browser except **AI подобряване**, which sends only the cropped photo to Replicate.
+
+## AI setup
+
+**Само портрет / background** work out of the box. The models load from Google's CDN the first time they're used.
+
+**AI подобряване** needs a Replicate account:
+1. Create a token at replicate.com → Account → API tokens.
+2. In Vercel: Project → Settings → Environment Variables, add `REPLICATE_API_TOKEN`, then redeploy.
+3. Cost is a fraction of a cent per photo. It uses `tencentarc/gfpgan` (Apache-2.0, fine for commercial use).
+   To use another version, set `REPLICATE_GFPGAN_VERSION`.
+
+Local testing of `/api/enhance` needs `npx vercel dev` instead of `npm run dev`.
 
 ## Files
 
@@ -38,6 +56,8 @@ Everything runs in the browser. There's no backend, and no personal data leaves 
 | `src/design.js` | Templates (defaults for every design option), fonts, shapes, frames, colors |
 | `src/templates.js` | Necrolog types, closings and the Bulgarian text generator. **Add new texts here.** |
 | `src/layouts.css` | Base sheet, shapes, frames, and per-template typography |
+| `src/photo/` | Photo editor: `PhotoEditor.jsx` (UI), `process.js` (crop, background, light), `ai.js` (MediaPipe + server call) |
+| `api/enhance.js` | Vercel serverless function for AI face restoration |
 | `src/dates.js` | Bulgarian date formatting, помен dates, .ics export |
 
 ### Adding a new template

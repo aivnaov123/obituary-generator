@@ -36,7 +36,7 @@ function Chips({ items, value, onChange, render }) {
 }
 
 export default function DesignPanel({
-  d, picked, setPicked, hasPhoto, overrides, setOverrides, photoSize, setPhotoSize, fields, setFields, previewRef, resetAll,
+  d, picked, setPicked, hasPhoto, onEditPhoto, overrides, setOverrides, photoSize, setPhotoSize, fields, setFields, previewRef, resetAll,
 }) {
   const panelRef = useRef(null)
   const [comp, setComp] = useState(null) // computed style of the picked text element
@@ -110,6 +110,9 @@ export default function DesignPanel({
         {picked === 'photo' && (
           <>
             {!hasPhoto && <p className="note">Качете снимка в „Съдържание“, за да я видите тук.</p>}
+            {hasPhoto && (
+              <button className="secondary edit-photo" onClick={onEditPhoto}>✂ Изрежи и оправи снимката (AI)</button>
+            )}
             <div className="ctl">
               <span>Форма</span>
               <Chips

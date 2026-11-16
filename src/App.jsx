@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Sheet from './Sheet'
 import DesignPanel from './DesignPanel'
+import PhotoEditor from './photo/PhotoEditor'
 import { TYPES, CLOSINGS, buildBody, buildEvent, variantCount } from './templates'
 import { LAYOUTS, resolveDesign } from './design'
 import { suggestedDate, yearsSince, addDays, addMonths, formatBg, toICS } from './dates'
@@ -21,7 +22,9 @@ const initial = {
   eventPlace: '',
   closing: CLOSINGS[0],
   family: 'От семейството',
-  photo: null,
+  photo: null, // final edited portrait shown on the necrolog
+  photoOriginal: null, // as uploaded
+  photoEdit: null, // editor state, so editing can continue later
   grayscale: true,
 }
 
@@ -48,6 +51,7 @@ export default function App() {
   const [variant, setVariant] = useState(0)
   const [customBody, setCustomBody] = useState(null)
   const [tab, setTab] = useState('text')
+  const [editorOpen, setEditorOpen] = useState(false)
 
   // design state
   const [layoutId, setLayoutId] = useState('classic')
@@ -86,9 +90,15 @@ export default function App() {
     const file = e.target.files?.[0]
     if (!file) return
     const r = new FileReader()
-    r.onload = () => setF((p) => ({ ...p, photo: r.result }))
+    r.onload = () => {
+      setF((p) => ({ ...p, photo: r.result, photoOriginal: r.result, photoEdit: null }))
+      setEditorOpen(true)
+    }
     r.readAsDataURL(file)
+    e.target.value = ''
   }
+
+  const photoAspect = d.photoShape === 'circle' ? 1 : (d.photoW ?? 250) / (d.photoH ?? 320)
 
   function pickFromPreview(id) {
     setPicked(id)
@@ -185,8 +195,11 @@ export default function App() {
               <input type="checkbox" checked={f.grayscale} onChange={(e) => setF((p) => ({ ...p, grayscale: e.target.checked }))} />
               Черно-бяла
             </label>
-            <button className="link" onClick={() => setF((p) => ({ ...p, photo: null }))}>Махни снимката</button>
+            <button className="link" onClick={() => setF((p) => ({ ...p, photo: null, photoOriginal: null, photoEdit: null }))}>Махни снимката</button>
           </div>
+        )}
+        {f.photo && (
+          <button className="secondary edit-photo" onClick={() => setEditorOpen(true)}>✂ Изрежи и оправи снимката (AI)</button>
         )}
       </section>
 
@@ -279,6 +292,7 @@ export default function App() {
         picked={picked}
         setPicked={setPicked}
         hasPhoto={!!f.photo}
+        onEditPhoto={() => setEditorOpen(true)}
         overrides={overrides}
         setOverrides={setOverrides}
         photoSize={photoSize}
@@ -326,6 +340,21 @@ export default function App() {
           </Fit>
         </div>
       </main>
+
+      {editorOpen && f.photoOriginal && (
+        <PhotoEditor
+          original={f.photoOriginal}
+          initial={f.photoEdit}
+          aspect={photoAspect}
+          shape={d.photoShape}
+          grayscale={f.grayscale}
+          onClose={() => setEditorOpen(false)}
+          onApply={(photo, photoEdit) => {
+            setF((p) => ({ ...p, photo, photoEdit }))
+            setEditorOpen(false)
+          }}
+        />
+      )}
 
       <div className="print-only">
         <Sheet f={f} body={body} event={event} d={d} />
