@@ -1,0 +1,168 @@
+/* =========================================================
+   Base sheet — A4 at 96dpi (794 x 1123 px)
+   Colors/fonts come from CSS variables set per template:
+   --accent --paper --ink --head --text
+   Font sizes use calc(base * var(--k,1)) so users can scale each field.
+   ========================================================= */
+.sheet {
+  width: 794px; height: 1123px; position: relative; overflow: hidden;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--text), Georgia, serif;
+}
+.sheet-inner {
+  position: absolute; inset: 56px; padding: 46px 60px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.cross { font-size: calc(54px * var(--k, 1)); line-height: 1; color: var(--accent); margin-bottom: 10px; }
+.cross .candle { height: calc(120px * var(--k, 1)); width: auto; display: block; }
+.heading { font-family: var(--head), serif; font-weight: 700; font-size: calc(62px * var(--k, 1)); letter-spacing: .14em; margin: 0; line-height: 1.1; }
+.sub { font-family: var(--head), serif; font-style: italic; font-size: calc(28px * var(--k, 1)); color: var(--accent); margin-top: 6px; }
+.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; width: 100%; }
+.text { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.name { font-family: var(--head), serif; font-weight: 700; font-size: calc(46px * var(--k, 1)); line-height: 1.12; }
+.years { font-size: calc(21px * var(--k, 1)); margin-top: 8px; letter-spacing: .12em; opacity: .85; }
+.body { font-size: calc(20px * var(--k, 1)); line-height: 1.6; margin: 20px auto 0; max-width: 580px; }
+.event { font-size: calc(18px * var(--k, 1)); line-height: 1.55; margin: 14px auto 0; max-width: 580px; font-style: italic; }
+.closing { font-family: var(--head), serif; font-weight: 600; font-size: calc(28px * var(--k, 1)); margin: 18px 0 0; color: var(--accent); }
+.family { font-size: calc(19px * var(--k, 1)); font-style: italic; margin-top: 10px; }
+.sheet .text > *, .sheet-inner > * { max-width: 100%; }
+
+/* ---------- photo: shape + frame (3 nested layers: accent / paper / accent) ---------- */
+.photo-wrap { position: relative; flex: none; }
+.ph { width: 100%; height: 100%; padding: 0; border-radius: inherit; overflow: hidden; }
+.ph-a { background: var(--accent); }
+.ph-b { background: var(--paper); }
+.ph-c { background: var(--accent); }
+.ph img, .ph .placeholder { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; }
+.ph img.gray { filter: grayscale(1) contrast(1.05); }
+
+.shape-rect { border-radius: 0; }
+.shape-rounded { border-radius: 22px; }
+.shape-oval, .shape-circle { border-radius: 50%; }
+.shape-arch { border-radius: 999px 999px 0 0; }
+
+.pfr-thin .ph-a { padding: 3px; }
+.pfr-thick .ph-a { padding: 10px; }
+.pfr-double .ph-a { padding: 2px; }
+.pfr-double .ph-b { padding: 6px; }
+.pfr-double .ph-c { padding: 2px; }
+.pfr-mat .ph-a { padding: 1px; }
+.pfr-mat .ph-b { padding: 12px; }
+.pfr-shadow { filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .28)); }
+
+/* ---------- page frames ---------- */
+.page-frame { position: absolute; inset: 40px; pointer-events: none; }
+.pgf-none { display: none; }
+.pgf-thin { border: 2px solid var(--accent); }
+.pgf-thick { border: 14px solid var(--accent); box-shadow: inset 0 0 0 5px var(--paper), inset 0 0 0 7px var(--accent); }
+.pgf-double { border: 7px double var(--accent); outline: 1px solid var(--accent); outline-offset: 8px; inset: 46px; }
+.pgf-rounded { border: 2px solid var(--accent); border-radius: 36px; box-shadow: inset 0 0 0 8px var(--paper), inset 0 0 0 9px var(--accent); }
+.pgf-arch { border: 2px solid var(--accent); border-radius: 220px 220px 0 0; box-shadow: inset 0 0 0 8px var(--paper), inset 0 0 0 9px var(--accent); }
+.pgf-corners {
+  --c: var(--accent);
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 110px 3px,
+    linear-gradient(var(--c), var(--c)) top left / 3px 110px,
+    linear-gradient(var(--c), var(--c)) top right / 110px 3px,
+    linear-gradient(var(--c), var(--c)) top right / 3px 110px,
+    linear-gradient(var(--c), var(--c)) bottom left / 110px 3px,
+    linear-gradient(var(--c), var(--c)) bottom left / 3px 110px,
+    linear-gradient(var(--c), var(--c)) bottom right / 110px 3px,
+    linear-gradient(var(--c), var(--c)) bottom right / 3px 110px;
+  background-repeat: no-repeat;
+}
+
+/* ---------- decorations ---------- */
+.corners .corner { position: absolute; width: 120px; height: 120px; color: var(--accent); }
+.corners .corner svg { width: 100%; height: 100%; display: block; }
+.corner.tl { top: 22px; left: 22px; }
+.corner.tr { top: 22px; right: 22px; transform: rotate(90deg); }
+.corner.br { bottom: 22px; right: 22px; transform: rotate(180deg); }
+.corner.bl { bottom: 22px; left: 22px; transform: rotate(270deg); }
+
+.corner-ribbon { position: absolute; top: 74px; left: -112px; width: 430px; height: 44px; background: var(--accent); transform: rotate(-45deg); z-index: 2; }
+.band { position: absolute; top: 0; left: 0; right: 0; height: 22px; background: var(--accent); }
+.branch { position: absolute; width: 250px; height: 250px; color: var(--accent); }
+.branch.tl { top: 22px; left: 22px; }
+.branch.br { bottom: 22px; right: 22px; transform: rotate(180deg); }
+.wreath { position: absolute; inset: -17%; width: 134%; height: 134%; color: var(--accent); pointer-events: none; }
+
+/* =========================================================
+   Template-specific typography & layout
+   ========================================================= */
+
+/* Класически */
+.layout-classic .heading { letter-spacing: .16em; }
+
+/* Православен */
+.layout-orthodox .sheet-inner { inset: 70px; }
+.layout-orthodox .heading { letter-spacing: .18em; }
+.layout-orthodox .cross { font-size: calc(60px * var(--k, 1)); }
+
+/* Траурна лента */
+.layout-ribbon .heading { font-weight: 600; letter-spacing: .1em; }
+.layout-ribbon .closing { color: var(--ink); }
+
+/* Модерен */
+.layout-modern .sheet-inner { inset: 0; padding: 92px 72px 64px; align-items: flex-start; text-align: left; }
+.layout-modern .heading { font-size: calc(40px * var(--k, 1)); letter-spacing: .32em; font-weight: 600; }
+.layout-modern .sub { font-style: normal; font-size: calc(20px * var(--k, 1)); color: #777; letter-spacing: .06em; }
+.layout-modern .main { flex-direction: row; gap: 44px; }
+.layout-modern .text { align-items: flex-start; text-align: left; }
+.layout-modern .name { font-size: calc(40px * var(--k, 1)); font-weight: 600; }
+.layout-modern .body, .layout-modern .event { margin-left: 0; font-size: calc(18px * var(--k, 1)); }
+.layout-modern .closing { font-size: calc(22px * var(--k, 1)); color: var(--ink); }
+.layout-modern .family { align-self: flex-end; }
+
+/* Минимален */
+.layout-minimal .sheet-inner { padding: 100px 90px; }
+.layout-minimal .cross { font-size: calc(40px * var(--k, 1)); }
+.layout-minimal .heading { font-size: calc(34px * var(--k, 1)); font-weight: 500; letter-spacing: .5em; }
+.layout-minimal .sub { font-style: normal; font-size: calc(18px * var(--k, 1)); letter-spacing: .2em; color: #777; }
+.layout-minimal .name { font-size: calc(52px * var(--k, 1)); font-weight: 600; }
+.layout-minimal .name::after { content: ''; display: block; width: 80px; height: 1.5px; background: var(--accent); margin: 22px auto 0; }
+.layout-minimal .closing { color: var(--ink); font-weight: 400; font-style: italic; }
+
+/* Цветя */
+.layout-floral .sheet-inner { inset: 70px 64px; }
+.layout-floral .heading { font-weight: 600; }
+
+/* Мрамор */
+.layout-marble:not(.custom-paper) {
+  background-image:
+    linear-gradient(115deg, transparent 38%, rgba(140, 128, 115, .16) 38.3%, transparent 39.2%),
+    linear-gradient(62deg, transparent 63%, rgba(140, 128, 115, .12) 63.2%, transparent 64.3%),
+    linear-gradient(142deg, transparent 18%, rgba(140, 128, 115, .10) 18.2%, transparent 19.8%),
+    linear-gradient(28deg, transparent 80%, rgba(140, 128, 115, .10) 80.2%, transparent 81%),
+    radial-gradient(ellipse at 25% 15%, #ffffff 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, #e9e4dc 0%, transparent 60%);
+}
+.layout-marble .heading { font-weight: 600; letter-spacing: .12em; }
+
+/* Тъмен */
+.layout-dark .heading { font-weight: 600; letter-spacing: .2em; }
+.layout-dark .years, .layout-dark .family { opacity: .75; }
+
+/* Свещ */
+.layout-candle .heading { font-weight: 700; letter-spacing: .1em; }
+.layout-candle .sub { font-family: var(--text), serif; }
+
+/* Маслинова клонка */
+.layout-olive .main { gap: 54px; }
+.layout-olive .heading { font-weight: 600; letter-spacing: .18em; }
+.layout-olive .sub { color: var(--ink); opacity: .7; }
+
+/* Арка */
+.layout-arch .sheet-inner { padding-top: 90px; }
+.layout-arch .heading { font-weight: 600; letter-spacing: .12em; font-size: calc(54px * var(--k, 1)); }
+
+/* Вестник */
+.layout-editorial .sheet-inner { padding: 40px 50px; }
+.layout-editorial .heading {
+  font-size: calc(74px * var(--k, 1)); font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  width: 100%; border-top: 6px solid var(--accent); border-bottom: 1.5px solid var(--accent); padding: 8px 0 4px;
+}
+.layout-editorial .sub { font-family: var(--text), serif; color: var(--ink); margin-top: 10px; }
+.layout-editorial .name { font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
+.layout-editorial .closing { font-family: var(--text), serif; font-style: italic; color: var(--ink); }
+.layout-editorial .family { width: 100%; border-top: 1.5px solid var(--accent); padding-top: 12px; }
