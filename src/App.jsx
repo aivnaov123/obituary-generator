@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Sheet from './Sheet'
 import DesignPanel from './DesignPanel'
 import PhotoEditor from './photo/PhotoEditor'
-import { TYPES, CLOSINGS, buildBody, buildEvent, variantCount } from './templates'
+import { TYPES, CLOSINGS, buildBody, buildEvent, allBodies } from './templates'
 import { LAYOUTS, resolveDesign } from './design'
 import { suggestedDate, yearsSince, addDays, addMonths, formatBg, toICS } from './dates'
 
@@ -223,21 +223,33 @@ export default function App() {
 
       <section>
         <h3>Текст</h3>
-        <textarea rows={4} value={body} onChange={(e) => setCustomBody(e.target.value)} />
-        <div className="row tight">
-          <button
-            className="link"
-            onClick={() => {
-              setVariant((v) => (v + 1) % variantCount(f.type))
+        <label>
+          Готов текст <small>({allBodies(f).length} варианта)</small>
+          <select
+            value={customBody !== null ? 'custom' : String(variant)}
+            onChange={(e) => {
+              if (e.target.value === 'custom') return
+              setVariant(Number(e.target.value))
               setCustomBody(null)
             }}
           >
-            ↻ Друг вариант
-          </button>
-          {customBody !== null && (
-            <button className="link" onClick={() => setCustomBody(null)}>Върни готовия текст</button>
-          )}
-        </div>
+            {allBodies(f).map((t, i) => (
+              <option key={i} value={i}>
+                {i + 1}. {t.length > 70 ? t.slice(0, 70) + '…' : t}
+              </option>
+            ))}
+            {customBody !== null && <option value="custom">✎ Собствен текст</option>}
+          </select>
+        </label>
+        <label>
+          Можете да го промените свободно
+          <textarea rows={4} value={body} onChange={(e) => setCustomBody(e.target.value)} />
+        </label>
+        {customBody !== null && (
+          <div className="row tight">
+            <button className="link" onClick={() => setCustomBody(null)}>Върни избрания готов текст</button>
+          </div>
+        )}
         <div className="row">
           <label className="grow">
             Завършек

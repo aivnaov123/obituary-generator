@@ -19,7 +19,7 @@ npm run build    # static site in dist/ — deploy to Vercel / Netlify / Cloudfl
   - *Photo:* shape (rectangle / rounded / oval / circle / arch), frame (thin / thick / double / mat / shadow), size, hide
   - *Every text field* (symbol, heading, subtitle, name, years, text, помен, closing, signature): font (10 Cyrillic fonts), size, color, bold / italic / UPPERCASE, alignment, letter spacing, hide, reset
   - *Symbol:* ✝ ☦ ✟ candle, or none
-- **Ready Bulgarian texts** that adapt to gender and relation (съпруг, баща и дядо…), several variants per type, fully editable
+- **Ready Bulgarian texts** that adapt to gender and relation (съпруг, баща и дядо…), 10 variants per type in a dropdown (50 texts), fully editable; 10 closing lines
 - **Suggested помен dates** (40th day counts the day of death as day 1; 6 months; 1 year; yearly)
 - **Photo editor** (opens on upload):
   - crop: drag and zoom in the exact frame shape of the template; rotate; undo; back to the original
